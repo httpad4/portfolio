@@ -27,7 +27,7 @@ export default function Navbar() {
         {/* Brand / logo — edit your name or handle */}
         <NavLink to="/" className="navbar-brand" onClick={handleNav}>
           <span className="navbar-brand-caret">&gt;</span>
-          arjay.net
+          ada.net
         </NavLink>
 
         {/* Desktop links */}

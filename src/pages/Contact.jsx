@@ -53,13 +53,14 @@ export default function Contact() {
       });
 
       let data = {};
-      if (res.headers.get("content-type")?.includes("application/json")) {
-        data = await res.json();
-      } else {
-        // Non-JSON response (e.g. an error page) — surface it
-        const text = await res.text();
+      // FormSubmit may return JSON without a Content-Type header, so always
+      // try parsing it; on failure fall back to reading it as plain text.
+      const raw = await res.text();
+      try {
+        data = JSON.parse(raw);
+      } catch {
         throw new Error(
-          text.slice(0, 160) || `Unexpected response (HTTP ${res.status}).`
+          raw.slice(0, 160) || `Unexpected response (HTTP ${res.status}).`
         );
       }
 
@@ -96,7 +97,8 @@ export default function Contact() {
         <p className="section-title">send a message</p>
 
         {status === "success" ? (
-          <div className="form-status success">
+          <div className="form-status success" role="status">
+            <span className="form-status-icon">&#10003;</span>
             Message sent. I&apos;ll get back to you soon.
           </div>
         ) : (

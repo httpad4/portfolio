@@ -8,7 +8,8 @@ import IconMarquee from "../components/IconMarquee";
  * EDIT the constants below to change your name/title/tagline
  * and the experience shown when "> whoami" is clicked.
  */
-const NAME = "ARJAY S. DE LOS ANGELES"; // your name
+const NAME_LINE_1 = "ARJAY S."; // first line of the name (desktop: both lines join)
+const NAME_LINE_2 = "DE LOS ANGELES"; // second line on mobile
 const TITLE = "Bachelor of Science in Computer Engineering";
 const TAGLINE =
   "Aspiring Computer Engineer focused on programming, cloud infrastructure, and networking.";
@@ -71,7 +72,11 @@ export default function Home() {
             </div>
           ) : (
             <div id="hero-content" className="hero-content">
-              <h1 className="hero-name">{NAME}</h1>
+              <h1 className="hero-name">
+              {NAME_LINE_1}
+              <br className="hero-name-break" />
+              {NAME_LINE_2}
+            </h1>
               <h2 className="hero-title">{TITLE}</h2>
               <p className="hero-tagline">{TAGLINE}</p>
               <Link className="hero-cta" to="/contact">

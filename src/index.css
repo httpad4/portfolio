@@ -52,6 +52,13 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+@media (max-width: 768px) {
+  html,
+  body {
+    overflow-x: hidden; /* never allow a horizontal scrollbar on phones */
+  }
+}
+
 #root {
   min-height: 100vh;
   display: flex;
@@ -490,6 +497,11 @@ svg {
   margin-bottom: 10px;
 }
 
+/* The name reads as one line on desktop; the <br> only shows on mobile */
+.hero-name-break {
+  display: none;
+}
+
 .hero-title {
   font-size: clamp(0.95rem, 2.5vw, 1.25rem);
   font-weight: 500;
@@ -600,14 +612,33 @@ svg {
     gap: 24px;
   }
 
+  /* allow the text block to shrink so nothing can overlap the photo */
+  .hero-main {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* long titles/taglines wrap instead of overflowing the screen */
+  .hero-name,
+  .hero-title,
+  .hero-tagline,
+  .experience-role,
+  .experience-point {
+    overflow-wrap: break-word;
+  }
+
   .hero-photo {
     align-self: center; /* center the portrait under the texts */
     margin-right: 0;
+    width: 100%;
+    max-width: 320px;
   }
 
   .hero-photo-img {
-    width: 320px;
-    height: 320px;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1; /* keeps the circle perfectly round */
+    max-width: none; /* scales with the container, never overflows */
   }
 
   .icon-marquee-track {
@@ -828,6 +859,16 @@ svg {
 .form-status.success {
   color: var(--success);
   border-color: var(--success);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
+  font-weight: 700;
+}
+
+.form-status-icon {
+  font-size: 1.1rem;
+  line-height: 1;
 }
 
 .form-status.error {
@@ -871,5 +912,88 @@ svg {
     flex-direction: column;
     align-items: flex-start;
     gap: 4px;
+  }
+}
+
+/* ============================================================
+   PHONE FITTING — portrait phones keep texts, photo & tools
+   comfortably inside the screen.
+   ============================================================ */
+@media (max-width: 768px) {
+  .hero {
+    padding: 40px 20px 0;
+    gap: 16px;
+  }
+
+  .hero-prompt {
+    font-size: 0.8rem;
+    margin-bottom: 8px;
+  }
+
+  .hero-name {
+    font-size: clamp(1.2rem, 6vw, 1.7rem);
+    margin-bottom: 6px;
+  }
+
+  /* break the name into two lines on phones */
+  .hero-name-break {
+    display: inline;
+  }
+
+  .hero-title {
+    font-size: 0.88rem;
+    margin-bottom: 10px;
+  }
+
+  .hero-tagline {
+    font-size: 0.82rem;
+    margin-bottom: 14px;
+    line-height: 1.5;
+  }
+
+  .hero-cta {
+    padding: 8px 16px;
+    font-size: 0.82rem;
+  }
+
+  .experience-role {
+    font-size: 0.92rem;
+  }
+
+  .experience-point {
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+
+  .hero-photo {
+    order: -1; /* photo on top of the texts in mobile view */
+    align-self: flex-start; /* left side of the screen */
+    margin-left: 8px; /* breathing room from the left edge */
+    max-width: 200px;
+  }
+
+  /* must come after the max-height rules, which would otherwise win and
+     force the image back to its fixed desktop size */
+  .hero-photo-img {
+    width: 100%;
+    height: auto;
+    max-width: none;
+  }
+
+  .icon-marquee {
+    margin-top: 28px; /* desktop's 180px is far too much on a phone */
+  }
+
+  .icon-marquee-track {
+    gap: 36px;
+  }
+
+  .marquee-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .marquee-label {
+    font-size: 0.68rem;
   }
 }
