@@ -1,4 +1,5 @@
-import { Route, Routes } from "react-router-dom";
+import { useEffect } from "react";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -16,6 +17,25 @@ const LINKEDIN = "https://www.linkedin.com/in/arjay-de-los-angeles-2ba1793b7";
 const STACK = ["HTML", "CSS", "JavaScript", "React", "Vite"];
 
 /**
+ * ScrollToTop — resets the viewport to the top on every route change.
+ * Without this, navigating between pages keeps the previous scroll
+ * position, so on mobile the new page looks "stuck" mid-screen.
+ */
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    const html = document.documentElement;
+    const previous = html.style.scrollBehavior;
+    html.style.scrollBehavior = "auto"; // force an instant jump
+    window.scrollTo(0, 0);
+    html.style.scrollBehavior = previous;
+  }, [pathname]);
+
+  return null;
+}
+
+/**
  * App — layout shell + all routes.
  * (Router is configured in main.jsx with HashRouter so the site
  *  works on GitHub Pages without server rewrites.)
@@ -29,6 +49,7 @@ export default function App() {
 
   return (
     <div className="app">
+      <ScrollToTop />
       <Navbar />
 
       <main className="main">

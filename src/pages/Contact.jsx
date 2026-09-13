@@ -166,12 +166,7 @@ export default function Contact() {
           </form>
         )}
 
-        <p className="form-note">
-          Messages are delivered to arjaydelosangeles88@gmail.com via
-          FormSubmit.co. The first submission sends a one-time activation email
-          to that address — click the link inside it before sending more. If
-          the form reports an error, the message below shows the exact reason.
-        </p>
+        
       </div>
     </div>
   );

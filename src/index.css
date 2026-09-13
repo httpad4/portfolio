@@ -318,16 +318,135 @@ svg {
   transform: translateY(-7px) rotate(-45deg);
 }
 
-/* Mobile dropdown */
+/* Mobile drawer — hidden on desktop, slides in from the right on mobile */
 .mobile-menu {
   display: none;
-  border-top: 1px solid var(--border);
-  background: var(--bg);
 }
 
-.mobile-menu ul {
-  list-style: none;
-  padding: 8px 24px 16px;
+.mobile-backdrop {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .navbar-links {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .mobile-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 150;
+    background: rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+
+  .mobile-backdrop.open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .mobile-menu {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(280px, 82vw);
+    z-index: 200;
+    background: var(--bg-elevated);
+    border-left: 1px solid var(--border);
+    overflow-y: auto;
+    /* slide in from the right edge */
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+  }
+
+  .mobile-menu.open {
+    transform: translateX(0);
+  }
+
+  .mobile-menu ul {
+    list-style: none;
+    padding: calc(var(--nav-height) + 16px) 24px 24px;
+  }
+
+  /* X close button — top-left of the drawer */
+  .mobile-menu-head {
+    position: absolute;
+    top: 0;
+    left: 24px;
+    height: var(--nav-height);
+    display: flex;
+    align-items: center;
+  }
+
+  .mobile-close {
+    position: relative;
+    width: 34px;
+    height: 34px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    transition: color 0.2s ease;
+  }
+
+  .mobile-close:hover {
+    color: var(--text-primary);
+  }
+
+  .mobile-close-line {
+    position: absolute;
+    width: 16px;
+    height: 1.5px;
+    background: currentColor;
+  }
+
+  .mobile-close-line:nth-child(1) {
+    transform: rotate(45deg);
+  }
+
+  .mobile-close-line:nth-child(2) {
+    transform: rotate(-45deg);
+  }
+
+  .mobile-menu li {
+    opacity: 0;
+    transform: translateX(16px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+
+  .mobile-menu.open li {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .mobile-menu.open li:nth-child(1) {
+    transition-delay: 0.04s;
+  }
+  .mobile-menu.open li:nth-child(2) {
+    transition-delay: 0.08s;
+  }
+  .mobile-menu.open li:nth-child(3) {
+    transition-delay: 0.12s;
+  }
+  .mobile-menu.open li:nth-child(4) {
+    transition-delay: 0.16s;
+  }
+  .mobile-menu.open li:nth-child(5) {
+    transition-delay: 0.2s;
+  }
 }
 
 .mobile-link {
@@ -349,20 +468,6 @@ svg {
 .mobile-link-prefix {
   color: var(--text-muted);
   margin-right: 8px;
-}
-
-@media (max-width: 768px) {
-  .navbar-links {
-    display: none;
-  }
-
-  .hamburger {
-    display: flex;
-  }
-
-  .mobile-menu.open {
-    display: block;
-  }
 }
 
 /* ============================================================
@@ -538,6 +643,11 @@ svg {
   margin-top: 180px; /* space between the hero texts and the marquee */
   padding: 0 0 10px;
   border-top: 1px solid var(--border);
+  cursor: grab;
+  touch-action: pan-y; /* horizontal drags are handled by JS, verticals scroll the page */
+  overscroll-behavior: none;
+  user-select: none;
+  -webkit-user-select: none;
   /* fade icons at the edges for a slicker look */
   -webkit-mask-image: linear-gradient(
     to right,
@@ -555,35 +665,45 @@ svg {
   );
 }
 
+.icon-marquee:active {
+  cursor: grabbing;
+}
+
 .icon-marquee-track {
   display: flex;
   align-items: center;
   gap: 72px;
   width: max-content;
-  animation: marquee-scroll 30s linear infinite;
   will-change: transform;
 }
 
-/* Pause on hover */
-.icon-marquee:hover .icon-marquee-track {
-  animation-play-state: paused;
-}
-
-@keyframes marquee-scroll {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
+/* Each tool is a button so it works with mouse, touch, and keyboard */
 .marquee-item {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  /* smooth grow/shrink while holding a tool */
+  transition: transform 0.2s ease;
+}
+
+/* Tool under the pointer enlarges while held & dragged */
+.marquee-item.is-pressed {
+  transform: scale(1.3);
+}
+
+.marquee-item:focus-visible .marquee-icon {
+  outline: 1px dashed var(--accent-hover);
+  outline-offset: 6px;
 }
 
 .marquee-icon {
@@ -604,6 +724,59 @@ svg {
   font-size: 0.72rem;
   color: var(--text-muted);
   white-space: nowrap;
+}
+
+/* Short description shown when a tool is clicked or dragged */
+.icon-marquee-info {
+  min-height: 40px;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border);
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.icon-marquee-info-content {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  animation: info-in 0.25s ease;
+}
+
+/* fade-out: the last description stays mounted while it fades away */
+.icon-marquee-info-content.fade-out {
+  animation: none;
+  opacity: 0;
+  transform: translateY(2px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+@keyframes info-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.marquee-info-prefix {
+  color: var(--text-muted);
+}
+
+.marquee-info-name {
+  color: var(--text-primary);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.marquee-info-desc {
+  color: var(--text-secondary);
+  max-width: 65ch;
 }
 
 @media (max-width: 768px) {
@@ -653,12 +826,15 @@ svg {
 
 /* Respect reduced-motion preferences */
 @media (prefers-reduced-motion: reduce) {
-  .icon-marquee-track {
-    animation: none;
-  }
+  /* autoplay is disabled in JS (IconMarquee), drag & click still work */
 
   .page {
     animation: none;
+  }
+
+  .icon-marquee-info-content {
+    animation: none;
+    transition: none;
   }
 }
 
