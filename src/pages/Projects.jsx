@@ -6,17 +6,31 @@
  */
 const projects = [
   {
-    title: "portfolio-site",
+    title: "NetForge",
+    link: "https://netforge-web-n3a6.onrender.com",
     description:
-      "This portfolio — a clean, command-prompt-inspired single page app built with React, Vite, and CSS variables for theming.",
-    tags: ["React", "Vite", "CSS"],
-    link: "https://github.com/httpad4",
+      "Interactive learning platform for computer networking (IP addressing, subnetting, protocols, routing, OSI model, and more). Features 9 modules with 50+ lessons and quizzes, JWT cookie auth with bcrypt hashing, per-user progress tracking, gamification (streaks and badges), a printable certificate, and an admin panel.",
+    tags: [
+      "Node.js",
+      "Express",
+      "SQLite",
+      "JWT",
+      "bcrypt",
+      "JavaScript",
+      "CSS",
+    ],
   },
   {
-    title: "aws-infra-automation",
+    title: "Linux Web Server Deployment on AWS EC2",
     description:
-      "Infrastructure-as-code scripts for provisioning EC2 instances, S3 buckets, and security groups on AWS using Bash and the AWS CLI.",
-    tags: ["AWS", "Bash", "Linux"],
+      "Provisioned an Ubuntu EC2 instance with a security group for public HTTP access, configured Nginx to serve a static site, and deployed the project from GitHub via SSH/SCP.",
+    tags: ["EC2", "Nginx", "SSH", "GitHub"],
+  },
+  {
+    title: "CloudExplorer – Cloud Computing Learning Platform",
+    description:
+      "A responsive multi-page educational web app demonstrating cloud concepts and service models, with interactive HTML Canvas network and elastic scaling simulations plus a built-in quiz system.",
+    tags: ["HTML", "JavaScript", "CSS"],
   },
   {
     title: "network-lab-sim",
